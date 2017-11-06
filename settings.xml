@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<settings>
+    <api>
+        <auth>
+            <username>
+            jasper.oosterbroek@student.hu.nl
+            </username>
+            <password>
+                JXwCrdq5iel_il2lLgaWhq-3AtpqZ-2r1s_UC0CLIc72XN9G7aM5vg
+            </password>
+        </auth>
+        <url>
+            <vertrektijden>
+                https://webservices.ns.nl/ns-api-avt?station=
+            </vertrektijden>
+            <storingen>
+                http://webservices.ns.nl/ns-api-storingen?station=
+            </storingen>
+        </url>
+    </api>
+    <station>
+        Utrecht centraal
+    </station>
+
+</settings>
