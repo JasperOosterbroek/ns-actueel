@@ -1,5 +1,11 @@
 import requests as req
 import xmltodict
+import pprint
+
+def stations(data):
+    for x in data['Stations']['Station']:
+        if x['Land'] == 'NL':
+            print(x['Namen']['Kort'])
 
 class apimanagement:
     ''' The ns api call system.
@@ -18,18 +24,26 @@ class apimanagement:
 
     def getvertrektijden(self,station):
         '''Request an api call for "vertrektijden" '''
-        data = self.sendcall(station, self.settings['settings']['api']['url']['vertrektijden'])
+        url =  self.settings['settings']['api']['url']['vertrektijden'] + station
+        data = self.sendcall(url)
         return  data
 
     def getstoring(self,station):
         '''Request an api call for "storingen" '''
-        data = self.sendcall(station, self.settings['settings']['api']['url']['storingen'])
+        url =self.settings['settings']['api']['url']['storingen'] + station
+        data = self.sendcall(url)
         return data
 
-    def sendcall(self,station,url):
+    def getstationlijst(self):
+        '''request an api call for "stationlijst" '''
+        url =  self.settings['settings']['api']['url']['stationlijst']
+        data = self.sendcall(url)
+        return data
+
+    def sendcall(self,url):
         '''Make an api call and return it\'s data'''
         try:
-            r = req.get(url + station, auth=(
+            r = req.get(url, auth=(
             self.settings['settings']['api']['auth']['username'], self.settings['settings']['api']['auth']['password']))
             r.raise_for_status()
         except req.exceptions.HTTPError as e:
@@ -41,5 +55,13 @@ class apimanagement:
         except req.exceptions.RequestException as e:
             print("Er ging iets fout:", e)
 
-        nicetext = xmltodict.parse(r.text)
-        return nicetext
+        dict = xmltodict.parse(r.text)
+        return dict
+
+api = apimanagement()
+stationdict = api.getstationlijst()
+vertrektijden = api.getvertrektijden('utrecht centraal')
+storingen = api.getstoring('utrecht centraal')
+pprint.pprint(storingen)
+pprint.pprint(vertrektijden)
+stations(stationdict)

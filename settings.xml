@@ -16,8 +16,17 @@
             <storingen>
                 http://webservices.ns.nl/ns-api-storingen?station=
             </storingen>
+            <stationlijst>
+                http://webservices.ns.nl/ns-api-stations-v2
+            </stationlijst>
         </url>
     </api>
+    <layout>
+        <table>
+            <width></width>
+            <heigth></heigth>
+        </table>
+    </layout>
     <station>
         Utrecht centraal
     </station>
