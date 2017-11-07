@@ -29,7 +29,8 @@ class gui:
         self.clearframe(currentframe)
         if(newframe == 'testpage'):
             self.buildtestpage()
-
+        elif(newframe == 'homepage'):
+            self.buildhomepage()
 
 
     def buildhomepage(self):
