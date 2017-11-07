@@ -1,10 +1,14 @@
 from tkinter import *
+import apimanagement as api
+import xmltodict
+
 class gui:
     '''The gui system
     '''
 
     def __init__(self,master):
         '''Return a gui object wich is used for all things gui '''
+        self.getsettings()
         self.master = master
         self.master.resizable(False, False)
 
@@ -22,6 +26,10 @@ class gui:
 
         # build first page
         self.buildhomepage()
+
+    def getsettings(self):
+        with open('settings.xml') as settingsFile:
+            self.settings = xmltodict.parse(settingsFile.read())
 
     def clearframe(self,frame):
         '''clear/'s specified frame'''
@@ -92,6 +100,9 @@ class gui:
         Button(self.gohomeframe, image = self.gobackpng, height=34, width=34, borderwidth=0, cursor="man", command=lambda: self.changeframe(currentframe, 'homepage')).grid(row=0, column=0, padx=20, )
         self.gohomeframe.place(y=550, x=40)
 
+
+    def buildreisinformatie(self):
+        data = api.apimanagement.getvertrektijden(self.settings['settings']['station'])
 root = Tk()
 gui = gui(root)
 root.mainloop()
