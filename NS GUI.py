@@ -18,7 +18,7 @@ class gui:
         self.homepageframe = Frame(self.master, background="#feca24")
 
 
-        self.gohomeframe = Frame(self.master, background="#00236a")
+
 
         # build first page
         self.buildhomepage()
@@ -29,6 +29,7 @@ class gui:
         for widget in frame.winfo_children():
             widget.pack_forget()
             widget.grid_forget()
+        frame.destroy()
 
     def  changeframe(self,currentframe,newframe):
         '''Change to desired frame'''
@@ -81,11 +82,12 @@ class gui:
     def buildgoto(self):
         self.buildgohome(self.gotoframe)
         self.background.config(image = self.cleanpng)
-        Label(self.gotoframe, text="Ik wil naar amsterdam").grid(row=0, column=0, padx=20, )
-        self.gotoframe.place(y=100, x=60)
+        Label(self.gotoframe, text="De reis naar Amsterdam kost €10", background="#2c2c2c").grid(row=0, column=0, padx=20, )
+        self.gotoframe.place(y=200, x=270)
 
 
     def buildgohome(self,currentframe):
+        self.gohomeframe = Frame(self.master, background="#00236a")
         self.gohomeframe.grid(row=0, column=0, columnspan=1, )
         Button(self.gohomeframe, image = self.gobackpng, height=34, width=34, borderwidth=0, cursor="man", command=lambda: self.changeframe(currentframe, 'homepage')).grid(row=0, column=0, padx=20, )
         self.gohomeframe.place(y=550, x=40)
