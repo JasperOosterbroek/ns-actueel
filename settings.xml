@@ -19,15 +19,66 @@
             <stationlijst>
                 http://webservices.ns.nl/ns-api-stations-v2
             </stationlijst>
+            <route>
+                http://webservices.ns.nl/ns-api-treinplanner?
+            </route>
         </url>
     </api>
     <layout>
         <table>
+            <rijsinformatie>
+                <columns>
+                    <column>Rit nummer</column>
+                    <column>Vertrektijd</column>
+                    <column>Vertraging</column>
+                    <column>Eindbestemming</column>
+                    <column>Treinsoort</column>
+                    <column>Spoor</column>
+                </columns>
+                <values>
+                    <value>RitNummer</value>
+                    <value>VertrekTijd</value>
+                    <value>VertrekVertragingTekst</value>
+                    <value>EindBestemming</value>
+                    <value>TreinSoort</value>
+                    <value>VertrekSpoor|#text</value>
+                </values>
+            </rijsinformatie>
+            <storing>
+                <gepland>
+                    <columns>
+                        <column>Traject</column>
+                        <column>Reden</column>
+                        <column>Datum</column>
+                    </columns>
+                    <values>
+                        <value>Traject</value>
+                        <value>Reden</value>
+                        <value>Datum</value>
+                    </values>
+                </gepland>
+                <ongepland>
+                    <columns>
+                        <column>Traject</column>
+                        <column>Reden</column>
+                        <column>Periode</column>
+                        <column>Advies</column>
+                    </columns>
+                    <values>
+                        <value>Traject</value>
+                        <value>Reden</value>
+                        <value>Periode</value>
+                        <value>Advies</value>
+                    </values>
+                </ongepland>
 
+            </storing>
         </table>
     </layout>
     <station>
         Utrecht centraal
     </station>
-
+    <goto>
+        Amsterdam
+    </goto>
 </settings>

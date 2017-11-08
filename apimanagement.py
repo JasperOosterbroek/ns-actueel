@@ -1,12 +1,6 @@
 import requests as req
 import xmltodict
-# import pprint
-
-# def stations(data):
-#     for x in data['Stations']['Station']:
-#         if x['Land'] == 'NL':
-#             print(x['Namen']['Kort'])
-
+import datetime
 
 class apiManagement:
     """The ns api call system.
@@ -18,7 +12,6 @@ class apiManagement:
         """Return an api manager object wich can be used to make api calls"""
         with open('settings.xml') as settingsFile:
             self.settings = xmltodict.parse(settingsFile.read())
-            print(self.settings)
 
     def getvertrektijden(self, station):
         """Request an api call for "vertrektijden" """
@@ -28,6 +21,7 @@ class apiManagement:
 
     def getstoring(self, station):
         """Request an api call for "storingen" """
+        station = station
         url = self.settings['settings']['api']['url']['storingen'] + station
         data = self.sendcall(url)
         return data
@@ -35,6 +29,12 @@ class apiManagement:
     def getstationlijst(self):
         """request an api call for "stationlijst" """
         url = self.settings['settings']['api']['url']['stationlijst']
+        data = self.sendcall(url)
+        return data
+
+    def getroute(self,startstation,endstation):
+        """request an api call to generate a route"""
+        url = self.settings['settings']['api']['url']['route'] + 'fromStation=' + startstation + '&toStation='+ endstation
         data = self.sendcall(url)
         return data
 
@@ -57,11 +57,3 @@ class apiManagement:
         else:
             dataasdict = xmltodict.parse(r.text)
             return dataasdict
-
-# api = apimanagement()
-# stationdict = api.getstationlijst()
-# vertrektijden = api.getvertrektijden('utrecht centraal')
-# storingen = api.getstoring('utrecht centraal')
-# pprint.pprint(storingen)
-# pprint.pprint(vertrektijden)
-# stations(stationdict)
