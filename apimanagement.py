@@ -1,7 +1,7 @@
 import requests as req
 import xmltodict
 import datetime
-
+import pprint
 class apiManagement:
     """The ns api call system.
     The api call system  has the following properties:
@@ -48,12 +48,19 @@ class apiManagement:
             r.raise_for_status()
         except req.exceptions.HTTPError as e:
             print("Http Error:", e)
+            return 'error'
         except req.exceptions.ConnectionError as e:
             print("Error Connecting:", e)
+            return 'error'
         except req.exceptions.Timeout as e:
             print("Timeout Error:", e)
+            return 'error'
         except req.exceptions.RequestException as e:
             print("Er ging iets fout:", e)
+            return 'error'
         else:
             dataasdict = xmltodict.parse(r.text)
-            return dataasdict
+            if 'error' in dataasdict.keys():
+                return 'error'
+            else:
+                return dataasdict
