@@ -2,9 +2,9 @@
 
 In dit project is het kaartjessysteem van de ns verbeterd door het toevoegen van nieuwe functies.
 De volgende functies zijn toegevoegd
-	Actuele storingen bekijken
-	Beste tijd krijgen om naar een voorafgedefineerd station te gaan
-	Actuele vertrijktijden van alle treinen op een geselecteerd station
+1. Actuele storingen bekijken
+2. Beste tijd krijgen om naar een voorafgedefineerd station te gaan
+3. Actuele vertrijktijden van alle treinen op een geselecteerd station
 
 ## Instalatie
 
