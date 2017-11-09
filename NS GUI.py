@@ -47,9 +47,9 @@ class Gui:
     def changeframe(self, currentframe, newframe):
         """Change to desired frame"""
         self.clearframe(currentframe)
-        if newframe == 'testpage':
-            self.testframe = Frame(self.master, background="#feca24")
-            self.buildtestpage()
+        if newframe == 'storing':
+            self.interferenceframe = Frame(self.master, background="#feca24")
+            self.buildinterference()
         elif newframe == 'homepage':
             self.homepageframe = Frame(self.master, background="#feca24")
             self.buildhomepage()
@@ -60,9 +60,7 @@ class Gui:
         elif newframe == 'reisinformatie':
             self.travelinformationframe = Frame(self.master, background="#feca24")
             self.buildtravelinformation()
-        elif newframe == 'storing':
-            self.interferenceframe = Frame(self.master, background="#feca24")
-            self.buildinterference()
+
 
     def buildhomepage(self):
         """function to build the homepage ui"""
@@ -91,7 +89,7 @@ class Gui:
         gotostation = self.settings['settings']['goto']
         # print(gotostation)
         # title
-        Label(self.gotoframe, text="De volgende trein gaat naar "+gotostation, background="#feca24").grid(row=0, column=0)
+        Label(self.gotoframe, text="De volgende trein naar "+gotostation + ' gaat', background="#feca24").grid(row=0, column=0)
         self.gotoframe.place(y=352, x=467, anchor="center")
         options = self.nsapi.getroute(fromstation,gotostation)
         for reis in options['ReisMogelijkheden']['ReisMogelijkheid']:
@@ -119,6 +117,7 @@ class Gui:
         self.buildgohome(self.travelinformationframe)
         self.background.config(image=self.cleanpng)
         station = self.settings['settings']['station']
+        Label(self.travelinformationframe,text = 'neen', background='#feca24').grid(row=0,column=0)
         # get the column values
         columnvalues = self.settings['settings']['layout']['table']['rijsinformatie']['columns'].values()
         columnnames = tuple(item for sublist in columnvalues for item in sublist)
@@ -127,18 +126,18 @@ class Gui:
         # building table and scrollbar using api data
         # configure table
         table = ttk.Treeview(self.travelinformationframe, columns=columnnames)
-        table.grid(row=0,column=2)
+        table.grid(row=1,column=2)
         table['show'] = 'headings'
         # configure select
         select = Listbox(self.travelinformationframe)
-        select.grid(row=0, column=0, sticky=N+S+W)
+        select.grid(row=1, column=0, sticky=N+S+W)
         select.bind('<<ListboxSelect>>', lambda e: self.selectstation(e,table))
         # configure table scroll
         tablescroll = ttk.Scrollbar(self.travelinformationframe, orient="vertical", command=table.yview)
-        tablescroll.grid(row=0,column=3, sticky=N+S+W)
+        tablescroll.grid(row=1,column=3, sticky=N+S+W)
         # configure selectscroll
         selectscroll = ttk.Scrollbar(self.travelinformationframe, orient="vertical", command=select.yview)
-        selectscroll.grid(row=0,column=1, sticky=N+S+W)
+        selectscroll.grid(row=1,column=1, sticky=N+S+W)
         # link scrolls
         table.configure(yscrollcommand=tablescroll.set)
         select.configure(yscrollcommand=selectscroll.set)
