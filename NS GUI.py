@@ -89,7 +89,7 @@ class Gui:
         gotostation = self.settings['settings']['goto']
         # print(gotostation)
         # title
-        Label(self.gotoframe, text="De volgende trein naar " + gotostation + ' gaat', background="#feca24").grid(row=0, column=0)
+        Label(self.gotoframe, text="De volgende trein naar station " + gotostation + ':', background="#feca24", foreground="#00236a", font=("Arial", 12)).grid(row=0, column=0)
         self.gotoframe.place(y=352, x=467, anchor="center")
         options = self.nsapi.getroute(fromstation, gotostation)
         if options != 'error':
@@ -101,7 +101,7 @@ class Gui:
                     reisdeel = reis['ReisDeel']
                     spoorstart = reisdeel['ReisStop'][0]['Spoor']['#text']
                     spoorend = reisdeel['ReisStop'][-1]['Spoor']['#text']
-                    reisinfo = "Om {} gaat er een trein vanaf spoor {} naar {}\nDeze trein komt aan om {} op spoor {}".format(actuelevetrektijd, spoorstart, gotostation, actueleaankomstijd, spoorend)
+                    reisinfo = "gaat om {} vanaf spoor {} op station {}.\nDeze trein zal aankomen op station {} om {} op spoor {}.".format(actuelevetrektijd, spoorstart, fromstation, gotostation,actueleaankomstijd, spoorend)
                     Label(self.gotoframe, text=reisinfo, background='#feca24').grid(row=1, column=0)
         else:
             self.popupmsg('er is iets fout gegaan probeer het opnieuw\nAls de error aan blijft houden neem contact op met een ns medewerker.')
@@ -121,7 +121,9 @@ class Gui:
         self.buildgohome(self.travelinformationframe)
         self.background.config(image=self.cleanpng)
         station = self.settings['settings']['station']
-        Label(self.travelinformationframe, text='neen', background='#feca24').grid(row=0, column=0)
+        Label(self.travelinformationframe, anchor=W ,text='Selecteer station:', background='#feca24', foreground="#00236a", font=("Arial", 12)).grid(row=0, column=0)
+        travelinfolabel = Label(self.travelinformationframe, justify=LEFT ,text='Actuele reis informatie station {}'.format(station), background='#feca24', foreground="#00236a", font=("Arial", 12))
+        travelinfolabel.grid(row=0, column=2)
         # get the column values
         columnvalues = self.settings['settings']['layout']['table']['rijsinformatie']['columns'].values()
         columnnames = tuple(item for sublist in columnvalues for item in sublist)
@@ -135,8 +137,8 @@ class Gui:
             table['show'] = 'headings'
             # configure select
             select = Listbox(self.travelinformationframe)
-            select.grid(row=1, column=0, sticky=N+S+W)
-            select.bind('<<ListboxSelect>>', lambda e: self.selectstation(e, table))
+            select.grid(row=1, column=0, sticky=N+S+W+E)
+            select.bind('<<ListboxSelect>>', lambda e: self.selectstation(e, table,travelinfolabel))
             # configure table scroll
             tablescroll = ttk.Scrollbar(self.travelinformationframe, orient="vertical", command=table.yview)
             tablescroll.grid(row=1, column=3, sticky=N+S+W)
@@ -164,13 +166,14 @@ class Gui:
         station = self.settings['settings']['station']
         data = self.nsapi.getstoring(station)
 
-    def selectstation(self, evt, table):
+    def selectstation(self, evt, table, label):
         """Process select event and changes the table"""
         w = evt.widget
         index = int(w.curselection()[0])
         value = w.get(index)
         print('You selected item %d: "%s"' % (index, value))
         self.populatetravelinfotable(table, value)
+        label.config(text='Actuele reis informatie station {}'.format(value))
 
     def populatetravelinfotable(self, table, station):
         """function to populate the travelinfo table with values"""
@@ -234,6 +237,7 @@ class Gui:
         popup.mainloop()
 
 root = Tk()
+root.title("NS")
 gui = Gui(root)
 
 root.mainloop()
