@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from apimanagement import apiManagement as Api
 import xmltodict
-import pprint
 import datetime
 
 
@@ -11,8 +10,8 @@ class Gui:
     """
 
     def __init__(self, master):
+        """Initializes the frames and the api"""
         self.nsapi = Api()
-        """Return a gui object wich is used for all things gui """
         self.settings = self.getsettings()
         self.master = master
         self.master.resizable(False, False)
@@ -21,7 +20,7 @@ class Gui:
         self.gobackpng = PhotoImage(file="home.png")
         self.background = Label(image=self.homepng)
         self.background.grid(row=0, column=0)
-        # all frames here please
+        # all frames need to be made in the init
         self.homepageframe = Frame(self.master, background="#feca24")
         self.testframe = Frame(self.master)
         self.gotoframe = Frame(self.master)
@@ -33,20 +32,33 @@ class Gui:
 
     @staticmethod
     def getsettings():
-        """writes the settings from file to dictionary"""
+        """
+        writes the settings from file to dictionary
+
+        :return: The settings as an ordered dictionary
+        """
         with open('settings.xml') as settingsFile:
             return xmltodict.parse(settingsFile.read())
 
     @staticmethod
     def clearframe(frame):
-        """clear's specified frame"""
+        """
+        clear's specified frame
+
+        :param frame: The frame that needs to be removed
+        """
         for widget in frame.winfo_children():
             widget.pack_forget()
             widget.grid_forget()
         frame.destroy()
 
     def changeframe(self, currentframe, newframe):
-        """Change to desired frame"""
+        """
+        Change to desired frame
+
+        :param currentframe: The frame that the function is called in
+        :param newframe: The name of the frame the code has to change to
+        """
         self.clearframe(currentframe)
         if newframe == 'storing':
             self.interferenceframe = Frame(self.master, background="#feca24")
@@ -63,7 +75,9 @@ class Gui:
             self.buildtravelinformation()
 
     def buildhomepage(self):
-        """function to build the homepage ui"""
+        """
+        function that builds the homepage ui
+        """
         self.homepageframe.grid(row=0, column=0, columnspan=1, )
         self.background.config(image=self.homepng)
         Button(self.homepageframe, text='Ik wil naar \nAmsterdam', background='#493782', foreground="#fff", height=3, width=12,
@@ -82,20 +96,19 @@ class Gui:
         self.homepageframe.place(y=500, x=35)
 
     def buildgoto(self):
-        """function to build the goto ui"""
+        """
+        function that builds the goto ui
+        """
         self.buildgohome(self.gotoframe)
         self.background.config(image=self.cleanpng)
         fromstation = self.settings['settings']['station']
         gotostation = self.settings['settings']['goto']
-        # print(gotostation)
-        # title
         Label(self.gotoframe, text="De volgende trein naar station " + gotostation + ':', background="#feca24", foreground="#00236a", font=("Arial", 12)).grid(row=0, column=0)
         self.gotoframe.place(y=352, x=467, anchor="center")
         options = self.nsapi.getroute(fromstation, gotostation)
         if options != 'error':
             for reis in options['ReisMogelijkheden']['ReisMogelijkheid']:
                 if reis['Optimaal'] == 'true':
-                    pprint.pprint(reis)
                     actuelevetrektijd = self.fixtime(reis['ActueleVertrekTijd'], 'time')
                     actueleaankomstijd = self.fixtime(reis['ActueleAankomstTijd'], 'time')
                     reisdeel = reis['ReisDeel']
@@ -108,18 +121,25 @@ class Gui:
             self.changeframe(self.gotoframe, 'homepage')
 
     def buildgohome(self, currentframe):
-        """function to build the home button"""
+        """
+        function that builds the home button
+
+        :param currentframe: the current frame the button is build in
+        """
         self.gohomeframe = Frame(self.master, background="#00236a")
         self.gohomeframe.grid(row=0, column=0, columnspan=1, )
         Button(self.gohomeframe, image=self.gobackpng, height=34, width=34, borderwidth=0, cursor="man", command=lambda: self.changeframe(currentframe, 'homepage')).grid(row=0, column=0, padx=20, )
         self.gohomeframe.place(y=664, x=40)
 
     def buildtravelinformation(self):
-        """function to build the reisinformatie ui"""
-        # label titel
+        """
+        function to build the reisinformatie ui
+        """
+        #frame settings
         self.travelinformationframe.grid(row=0, column=0)
         self.buildgohome(self.travelinformationframe)
         self.background.config(image=self.cleanpng)
+        #label settings
         station = self.settings['settings']['station']
         Label(self.travelinformationframe, anchor=W ,text='Selecteer station:', background='#feca24', foreground="#00236a", font=("Arial", 12)).grid(row=0, column=0)
         travelinfolabel = Label(self.travelinformationframe, justify=LEFT ,text='Actuele reis informatie station {}'.format(station), background='#feca24', foreground="#00236a", font=("Arial", 12))
@@ -158,25 +178,76 @@ class Gui:
             self.changeframe(self.travelinformationframe, 'homepage')
 
     def buildinterference(self):
-        """function to build the storing ui"""
-        # display storingen
+        """
+        function that builds the interferences ui and fills it with data
+        """
         self.interferenceframe.grid(row=0, column=0)
         self.buildgohome(self.interferenceframe)
         self.background.config(image=self.cleanpng)
         station = self.settings['settings']['station']
-        data = self.nsapi.getstoring(station)
+        data = self.nsapi.getstoring()
+        if data['Storingen']['Gepland'] == None and data['Storingen']['Ongepland'] == None:
+            Label(self.interferenceframe, justify=LEFT ,text='Er zijn geen storingen', background='#feca24', foreground="#00236a", font=("Arial", 12)).grid(row=1,column=1)
+        else:
+            # configure title
+            Label(self.interferenceframe,text='Storingen', background='#feca24', foreground="#00236a", font=("Arial", 12)).grid(row=0,column=0)
+            # configure textfield
+            textfield = Text(self.interferenceframe, wrap=WORD,background='#feca24',borderwidth=0)
+            textfield.grid(row=1, column=0)
+            # configure table scroll
+            textscroll = ttk.Scrollbar(self.interferenceframe, orient="vertical", command=textfield.yview)
+            textscroll.grid(row=1, column=1, sticky=N + S + W)
+            # check if there are planned interferences
+            if data['Storingen']['Gepland']!= None:
+                plannedinterferences = data['Storingen']['Gepland']
+                textfield.insert(INSERT,'Gepland\n','a')
+                if type(plannedinterferences['Storing']) == list:
+                    for value in plannedinterferences['Storing']:
+                        cleanmessage = self.removehtmlmarkup(value['Bericht'])
+                        text = '\nTraject:{}\n{}\n\n'.format(value['Traject'],cleanmessage)
+                        textfield.insert(INSERT,text,'a')
+                else:
+                    for value in plannedinterferences.values():
+                        cleanmessage = self.removehtmlmarkup(value['Bericht'])
+                        text = '\nTraject:{}\n{}\n\n'.format(value['Traject'], cleanmessage)
+                        textfield.insert(INSERT, text, 'a')
+            # check if there are unplanned interferences
+            if data['Storingen']['Ongepland'] != None:
+                unplannedinterferences = data['Storingen']['Ongepland']
+                textfield.insert(INSERT, 'Ongepland\n', 'a')
+                if type(unplannedinterferences['Storing']) == list:
+                    for value in unplannedinterferences['Storing']:
+                        cleanmessage = self.removehtmlmarkup(value['Bericht'])
+                        text = '\nTraject:{}\n{}\n\n'.format(value['Traject'],cleanmessage)
+                        textfield.insert(INSERT, text, 'a')
+                else:
+                    for value in unplannedinterferences.values():
+                        cleanmessage = self.removehtmlmarkup(value['Bericht'])
+                        text = '\nTraject:{}\n{}\n\n'.format(value['Traject'], cleanmessage)
+                        textfield.insert(INSERT, text, 'a')
+            textfield.config(state=DISABLED)
 
     def selectstation(self, evt, table, label):
-        """Process select event and changes the table"""
+        """
+        This function gets an event and changes the table
+
+        :param  evt: variable trown by the .bind function
+        :param  table: the table that has to change
+        :param  label: the label to make the text change
+        """
         w = evt.widget
         index = int(w.curselection()[0])
         value = w.get(index)
-        print('You selected item %d: "%s"' % (index, value))
         self.populatetravelinfotable(table, value)
         label.config(text='Actuele reis informatie station {}'.format(value))
 
     def populatetravelinfotable(self, table, station):
-        """function to populate the travelinfo table with values"""
+        """
+        function to populate the travelinfo table with values
+
+        :param  table: the table that needs to change
+        :param  station: the station that is used by the api
+        """
         # empty current table
         table.delete(*table.get_children())
         # get all values for the table and transform them in tuples
@@ -189,6 +260,7 @@ class Gui:
             table.heading(column, text=column)
             table.column(column, stretch=True, width=100)
         data = self.nsapi.getvertrektijden(station)
+        #check if the api did not throw an error
         if data != 'error':
             for row in data['ActueleVertrekTijden']['VertrekkendeTrein']:
                 rowlist = list()
@@ -201,7 +273,7 @@ class Gui:
                         strdisplaytime = self.fixtime(row['VertrekTijd'])
                         rowlist.append(strdisplaytime)
                     elif value == 'VertrekVertragingTekst':
-                        # check if there is 'vertraging'
+                        # check if there is a delay
                         if 'VertrekVertragingTekst' in row:
                             rowlist.append(row[value])
                         else:
@@ -214,20 +286,30 @@ class Gui:
 
     @staticmethod
     def fixtime(time, timetype='full'):
-        """fixes time so it is readable"""
+        """
+        This function fixed the nsapi time
+
+        :param time: the time that needs to be fixed
+        :param timetype: define what kind of return type you want
+
+        :return: The formatted displaytime string
+        """
         if timetype == 'full':
             datetimeobject = datetime.datetime.strptime(str(time), '%Y-%m-%dT%H:%M:%S%z')
-            strdisplaytime = datetime.datetime.strftime(datetimeobject, '%Y-%m-%d %H:%M')
-            return strdisplaytime
+            displaytime = datetime.datetime.strftime(datetimeobject, '%Y-%m-%d %H:%M')
+            return displaytime
         elif timetype == 'time':
             datetimeobject = datetime.datetime.strptime(str(time), '%Y-%m-%dT%H:%M:%S%z')
-            strdisplaytime = datetime.datetime.strftime(datetimeobject, '%H:%M')
-            return strdisplaytime
+            displaytime = datetime.datetime.strftime(datetimeobject, '%H:%M')
+            return displaytime
         else:
             return 'Er is iets fout gegaan probeer het opnieuw!'
 
     @staticmethod
     def popupmsg(msg):
+        """
+        This function generates an error popup window
+        """
         popup = Tk()
         popup.wm_title("Error")
         label = ttk.Label(popup, text=msg)
@@ -235,6 +317,29 @@ class Gui:
         b1 = ttk.Button(popup, text="Oke", command=popup.destroy)
         b1.pack()
         popup.mainloop()
+
+    @staticmethod
+    def removehtmlmarkup(htmltxt):
+        """
+        This function clears the nsapi text from html tags
+
+        :param htmltxt: The text that needs its html tags removed
+        :return: The formatted input
+        """
+        output = ""
+        tag = False
+        quote = False
+
+        for text in htmltxt:
+                if text == '<' and not quote:
+                    tag = True
+                elif text == '>' and not quote:
+                    tag = False
+                elif (text == '"' or text == "'") and tag:
+                    quote = not quote
+                elif not tag:
+                    output = output + text
+        return output
 
 root = Tk()
 root.title("NS")

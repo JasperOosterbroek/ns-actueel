@@ -19,10 +19,9 @@ class apiManagement:
         data = self.sendcall(url)
         return data
 
-    def getstoring(self, station):
+    def getstoring(self):
         """Request an api call for "storingen" """
-        station = station
-        url = self.settings['settings']['api']['url']['storingen'] + station
+        url = self.settings['settings']['api']['url']['storingen']
         data = self.sendcall(url)
         return data
 

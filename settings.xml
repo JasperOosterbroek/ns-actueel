@@ -14,7 +14,7 @@
                 https://webservices.ns.nl/ns-api-avt?station=
             </vertrektijden>
             <storingen>
-                http://webservices.ns.nl/ns-api-storingen?station=
+                http://webservices.ns.nl/ns-api-storingen?actual=true
             </storingen>
             <stationlijst>
                 http://webservices.ns.nl/ns-api-stations-v2
@@ -44,35 +44,6 @@
                     <value>VertrekSpoor|#text</value>
                 </values>
             </rijsinformatie>
-            <storing>
-                <gepland>
-                    <columns>
-                        <column>Traject</column>
-                        <column>Reden</column>
-                        <column>Datum</column>
-                    </columns>
-                    <values>
-                        <value>Traject</value>
-                        <value>Reden</value>
-                        <value>Datum</value>
-                    </values>
-                </gepland>
-                <ongepland>
-                    <columns>
-                        <column>Traject</column>
-                        <column>Reden</column>
-                        <column>Periode</column>
-                        <column>Advies</column>
-                    </columns>
-                    <values>
-                        <value>Traject</value>
-                        <value>Reden</value>
-                        <value>Periode</value>
-                        <value>Advies</value>
-                    </values>
-                </ongepland>
-
-            </storing>
         </table>
     </layout>
     <station>
