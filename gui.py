@@ -80,17 +80,17 @@ class Gui:
         """
         self.homepageframe.grid(row=0, column=0, columnspan=1, )
         self.background.config(image=self.homepng)
-        Button(self.homepageframe, text='Ik wil naar \nAmsterdam', background='#493782', foreground="#fff", height=3, width=12,
+        Button(self.homepageframe, text='Ik wil naar \nAmsterdam', background='#493782', foreground="#fff", height=3, width=12, cursor="hand2",
                font=('Helvetica', 10, 'bold italic'), command=lambda: self.changeframe(self.homepageframe, 'goto')).grid(row=0, column=0, padx=20, )
-        Button(self.homepageframe, text='Kopen \n los kaartje', background='#493782', foreground="#fff", height=3, width=12,
+        Button(self.homepageframe, text='Kopen \n los kaartje', background='#493782', foreground="#fff", height=3, width=12, cursor="hand2",
                font=('Helvetica', 10, 'bold italic')).grid(row=0, column=1, padx=20)
-        Button(self.homepageframe, text='Kopen \n OV-Chipkaart', background='#493782', foreground="#fff", height=3, width=12,
+        Button(self.homepageframe, text='Kopen \n OV-Chipkaart', background='#493782', foreground="#fff", height=3, width=12, cursor="hand2",
                font=('Helvetica', 10, 'bold italic')).grid(row=0, column=2, padx=20)
-        Button(self.homepageframe, text='Ik wil naar \nhet buitenland', background='#493782', foreground="#fff", height=3,
+        Button(self.homepageframe, text='Ik wil naar \nhet buitenland', background='#493782', foreground="#fff", height=3, cursor="hand2",
                width=12, font=('Helvetica', 10, 'bold italic')).grid(row=0, column=3, padx=20)
-        Button(self.homepageframe, text='Reisinformatie \nopvragen', background='#493782', foreground="#fff", height=3,
+        Button(self.homepageframe, text='Reisinformatie \nopvragen', background='#493782', foreground="#fff", height=3, cursor="hand2",
                width=12, font=('Helvetica', 10, 'bold italic'), command=lambda: self.changeframe(self.homepageframe, 'reisinformatie')).grid(row=0, column=4, padx=20)
-        Button(self.homepageframe, text='storingen \nopvragen', background='#493782', foreground="#fff", height=3,
+        Button(self.homepageframe, text='Storingen \nopvragen', background='#493782', foreground="#fff", height=3, cursor="hand2",
                width=12, font=('Helvetica', 10, 'bold italic'),
                command=lambda: self.changeframe(self.homepageframe, 'storing')).grid(row=0, column=5, padx=20)
         self.homepageframe.place(y=500, x=35)
@@ -128,7 +128,7 @@ class Gui:
         """
         self.gohomeframe = Frame(self.master, background="#00236a")
         self.gohomeframe.grid(row=0, column=0, columnspan=1, )
-        Button(self.gohomeframe, image=self.gobackpng, height=34, width=34, borderwidth=0, cursor="man", command=lambda: self.changeframe(currentframe, 'homepage')).grid(row=0, column=0, padx=20, )
+        Button(self.gohomeframe, image=self.gobackpng, height=34, width=34, borderwidth=0, cursor="hand2", command=lambda: self.changeframe(currentframe, 'homepage')).grid(row=0, column=0, padx=20, )
         self.gohomeframe.place(y=664, x=40)
 
     def buildtravelinformation(self):
