@@ -112,12 +112,12 @@ class Gui:
         if options != 'error':
             for reis in options['ReisMogelijkheden']['ReisMogelijkheid']:
                 if reis['Optimaal'] == 'true':
-                    actuelevetrektijd = self.fixtime(reis['ActueleVertrekTijd'], 'time')
-                    actueleaankomstijd = self.fixtime(reis['ActueleAankomstTijd'], 'time')
-                    reisdeel = reis['ReisDeel']
-                    spoorstart = reisdeel['ReisStop'][0]['Spoor']['#text']
-                    spoorend = reisdeel['ReisStop'][-1]['Spoor']['#text']
-                    reisinfo = "gaat om {} vanaf spoor {} op station {}.\nDeze trein zal aankomen op station {} om {} op spoor {}.".format(actuelevetrektijd, spoorstart, fromstation, gotostation,actueleaankomstijd, spoorend)
+                    currentdeparturetime = self.fixtime(reis['ActueleVertrekTijd'], 'time')
+                    currentarrivaltime = self.fixtime(reis['ActueleAankomstTijd'], 'time')
+                    ride = reis['ReisDeel']
+                    platformstart = ride['ReisStop'][0]['Spoor']['#text']
+                    platformend = ride['ReisStop'][-1]['Spoor']['#text']
+                    reisinfo = "gaat om {} vanaf spoor {} op station {}.\nDeze trein zal aankomen op station {} om {} op spoor {}.".format(currentdeparturetime, platformstart, fromstation, gotostation,currentarrivaltime, platformend)
                     Label(self.gotoframe, text=reisinfo, background='#feca24').grid(row=1, column=0)
         else:
             self.popupmsg('er is iets fout gegaan probeer het opnieuw\nAls de error aan blijft houden neem contact op met een ns medewerker.')
@@ -312,6 +312,8 @@ class Gui:
     def popupmsg(msg):
         """
         This function generates an error popup window
+
+        :param msg: The error message that needs to be displayed
         """
         popup = Tk()
         popup.wm_title("Error")
