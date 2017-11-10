@@ -14,7 +14,7 @@ In het bestand settings.xml moeten het huidige station en het station voor de ik
 
 
 ```
- <station>
+    <station>
         Utrecht centraal
     </station>
     <goto>
